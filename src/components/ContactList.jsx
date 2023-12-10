@@ -1,4 +1,3 @@
-
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 
@@ -9,112 +8,24 @@ function ContactList() {
       <Table striped hover responsive>
         <thead>
           <tr>
-            <th>id</th>
-            <th>Full Name</th>
-            <th>Email Address</th>
-            <th>Contact Number</th>
-            <th>Location</th>
-            <th>Registered Date</th>
-            <th>Actions</th>
+            <th className='align-baseline'>Id</th>
+            <th className='align-baseline'>Full Name</th>
+            <th className='align-baseline'>Email Address</th>
+            <th className='align-baseline'>Contact Number</th>
+            <th className='align-baseline'>Location</th>
+            <th className='align-baseline'>Registered Date</th>
+            <th className='align-baseline'>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>1</td>
-            <td>Mark Otto</td>
-            <td>example@email.com</td>
-            <td>0915123456</td>
-            <td>Cebu</td>
-            <td>12/12/2000</td>
-            <td>
-              <Button variant='primary' size='sm' className='m-1'>
-                View
-              </Button>
-              {/* Add a View button */}
-              <Button variant='success' size='sm' className='m-1'>
-                Update
-              </Button>
-              {/* Add an Update button */}
-              <Button variant='danger' size='sm' className='m-1'>
-                Delete
-              </Button>
-              {/* Add a Delete button */}
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>John Doe</td>
-            <td>example@email.com</td>
-            <td>0915123456</td>
-            <td>Manila</td>
-            <td>01/12/1998</td>
-            <td>
-              <Button variant='primary' size='sm' className='m-1'>
-                View
-              </Button>
-              {/* Add a View button */}
-              <Button variant='success' size='sm' className='m-1'>
-                Update
-              </Button>
-              {/* Add an Update button */}
-              <Button variant='danger' size='sm' className='m-1'>
-                Delete
-              </Button>
-              {/* Add a Delete button */}
-            </td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>John Doe</td>
-            <td>example@email.com</td>
-            <td>0915123456</td>
-            <td>Manila</td>
-            <td>01/12/1998</td>
-            <td>
-              <Button variant='primary' size='sm' className='m-1'>
-                View
-              </Button>
-              {/* Add a View button */}
-              <Button variant='success' size='sm' className='m-1'>
-                Update
-              </Button>
-              {/* Add an Update button */}
-              <Button variant='danger' size='sm' className='m-1'>
-                Delete
-              </Button>
-              {/* Add a Delete button */}
-            </td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>John Doe</td>
-            <td>example@email.com</td>
-            <td>0915123456</td>
-            <td>Manila</td>
-            <td>01/12/1998</td>
-            <td>
-              <Button variant='primary' size='sm' className='m-1'>
-                View
-              </Button>
-              {/* Add a View button */}
-              <Button variant='success' size='sm' className='m-1'>
-                Update
-              </Button>
-              {/* Add an Update button */}
-              <Button variant='danger' size='sm' className='m-1'>
-                Delete
-              </Button>
-              {/* Add a Delete button */}
-            </td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>John Doe</td>
-            <td>example@email.com</td>
-            <td>0915123456</td>
-            <td>Manila</td>
-            <td>01/12/1998</td>
-            <td>
+            <td className='align-middle'>1</td>
+            <td className='align-middle'>Mark Otto</td>
+            <td className='align-middle'>example@email.com</td>
+            <td className='align-middle'>0915123456</td>
+            <td className='align-middle'>Cebu</td>
+            <td className='align-middle'>12/12/2000</td>
+            <td className='align-middle'>
               <Button variant='primary' size='sm' className='m-1'>
                 View
               </Button>
