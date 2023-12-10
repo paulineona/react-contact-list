@@ -1,0 +1,24 @@
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+.change-placeholder::placeholder {
+  font-size: 10px !important;
+}
+.italic-option {
+  font-style: italic;
+}
+
+.border-class {
+  border: 1px solid #000; /* Change the color as needed */
+  border-radius: 5px; /* Optional: to make the border corners rounded */
+  padding: 10px; /* Optional: to add some space between the border and the form contents */
+}
+
+.title {
+  background-color: black;
+  border-radius: 5px;
+  color: white; /* To make the text visible against the black background */
+  text-align: left;
+  padding: 10px; /* To give some space around the text */
+}
