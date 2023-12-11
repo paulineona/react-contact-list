@@ -6,7 +6,6 @@ const PaginationComponent = ({ itemsPerPage, totalItems, paginate }) => {
   if (totalItems % itemsPerPage !== 0) {
     pageCount++;
   }
-
   const pageNumbers = [];
   for (let i = 1; i <= pageCount; i++) {
     pageNumbers.push(i);
