@@ -22,3 +22,12 @@
   text-align: left;
   padding: 10px; /* To give some space around the text */
 }
+
+.pagination .page-link {
+  color: black;
+}
+
+.pagination .active .page-link {
+  background-color: black;
+  border-color: black;
+}
