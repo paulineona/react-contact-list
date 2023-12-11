@@ -2,14 +2,18 @@
 import { Pagination } from "react-bootstrap";
 
 const PaginationComponent = ({ itemsPerPage, totalItems, paginate }) => {
-  const pageNumbers = [];
+  let pageCount = totalItems / itemsPerPage;
+  if (totalItems % itemsPerPage !== 0) {
+    pageCount++;
+  }
 
-  for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
+  const pageNumbers = [];
+  for (let i = 1; i <= pageCount; i++) {
     pageNumbers.push(i);
   }
 
   return (
-    <Pagination className='pagination'>
+    <Pagination className='text-dark'>
       {pageNumbers.map((number) => (
         <Pagination.Item key={number} onClick={() => paginate(number)}>
           {number}

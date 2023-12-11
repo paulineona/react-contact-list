@@ -12,15 +12,15 @@
 .border-class {
   border: 1px solid #000; /* Change the color as needed */
   border-radius: 5px; /* Optional: to make the border corners rounded */
-  padding: 10px; /* Optional: to add some space between the border and the form contents */
+  padding: 7px;
 }
 
 .title {
   background-color: black;
   border-radius: 5px;
-  color: white; /* To make the text visible against the black background */
+  color: white;
   text-align: left;
-  padding: 10px; /* To give some space around the text */
+  padding: 10px;
 }
 
 .pagination .page-link {
