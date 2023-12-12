@@ -2,6 +2,8 @@ import Header from "./components/header/Header";
 import ContactForm from "./components/ContactForm";
 import ContactList from "./components/ContactList";
 import ContactView from "./components/ContactView";
+import ContactUpdate from "./components/ContactUpdate";
+import ContactDelete from "./components/ContactDelete";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -19,22 +21,28 @@ export default function App() {
     localStorage.setItem("contacts", JSON.stringify(contacts));
   }, [contacts]);
 
-  const addContact = (contact) => {
-    // Generate a unique ID for the new contact
-    const id = Date.now().toString();
-
-    // Add the ID to the contact object
+  const handleAddContact = (contact) => {
+    const id = contacts.length + 1;
     const newContact = { id, ...contact };
-
-    // Add the new contact to the list
     setContacts((prevContacts) => [...prevContacts, newContact]);
   };
-  
+
+  const handleUpdateContact = (updatedContact) => {
+    setContacts((prevContacts) =>
+      prevContacts.map((contact) =>
+        contact.id === updatedContact.id ? updatedContact : contact
+      )
+    );
+  };
+
+  const handleDeleteContact = (id) => {
+    setContacts(contacts.filter((contact) => contact.id !== id));
+  };
   return (
     <Router>
       <div>
         <Header />
-        <Container>
+        <Container fluid>
           <Row>
             <Routes>
               <Route
@@ -42,7 +50,7 @@ export default function App() {
                 element={
                   <>
                     <Col xs={4} md={3}>
-                      <ContactForm addContact={addContact} />
+                      <ContactForm handleAddContact={handleAddContact} />
                     </Col>
                     <Col xs={8} md={9}>
                       <ContactList contacts={contacts} />
@@ -53,6 +61,24 @@ export default function App() {
               <Route
                 path='view/:id'
                 element={<ContactView contacts={contacts} />}
+              />
+              <Route
+                path='update/:id'
+                element={
+                  <ContactUpdate
+                    contacts={contacts}
+                    handleUpdateContact={handleUpdateContact}
+                  />
+                }
+              />
+              <Route
+                path='delete/:id'
+                element={
+                  <ContactDelete
+                    contacts={contacts}
+                    handleDeleteContact={handleDeleteContact}
+                  />
+                }
               />
             </Routes>
           </Row>

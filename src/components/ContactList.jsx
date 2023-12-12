@@ -10,6 +10,7 @@ const Td = ({ children }) => <td className='align-middle'>{children}</td>;
 
 export default function ContactList({ contacts }) {
   const [currentPage, setCurrentPage] = useState(1);
+
   const itemsPerPage = 5;
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -17,6 +18,15 @@ export default function ContactList({ contacts }) {
   const currentItems = contacts.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const formatFullName = (fullName) => {
+    const [lastName, firstName, middleInitial] = fullName.split(" ");
+    const formatName = (name) =>
+      name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    return `${formatName(lastName)}, ${formatName(firstName)} ${formatName(
+      middleInitial
+    )}.`;
+  };
 
   return (
     <div className='border-class'>
@@ -36,14 +46,8 @@ export default function ContactList({ contacts }) {
         <tbody>
           {currentItems.map((contact, index) => (
             <tr key={index}>
-              <Td>{index + 1}</Td>
-              <Td>
-                {(() => {
-                  const [lastName, firstName, middleInitial] =
-                    contact.fullName.split(" ");
-                  return `${lastName}, ${firstName} ${middleInitial}.`;
-                })()}
-              </Td>
+              <Td>{index + 1 + (currentPage - 1) * itemsPerPage}</Td>
+              <Td>{formatFullName(contact.fullName)}</Td>
               <Td>{contact.emailAddress}</Td>
               <Td>{contact.contactNumber}</Td>
               <Td>{contact.location}</Td>
@@ -54,12 +58,16 @@ export default function ContactList({ contacts }) {
                     View
                   </Button>
                 </Link>
-                <Button variant='success' size='sm' className='m-1'>
-                  Update
-                </Button>
-                <Button variant='danger' size='sm' className='m-1'>
-                  Delete
-                </Button>
+                <Link to={`/update/${contact.id}`}>
+                  <Button variant='success' size='sm' className='m-1'>
+                    Update
+                  </Button>
+                </Link>
+                <Link to={`/delete/${contact.id}`}>
+                  <Button variant='danger' size='sm' className='m-1'>
+                    Delete
+                  </Button>
+                </Link>
               </Td>
             </tr>
           ))}

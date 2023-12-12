@@ -31,3 +31,12 @@
   background-color: black;
   border-color: black;
 }
+
+.card-title {
+  background-color: black;
+  border-radius: 5px;
+  color: white;
+  text-align: left;
+  padding: 10px;
+  font-size: 20px;
+}
