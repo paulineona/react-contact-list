@@ -1,21 +1,28 @@
 /* eslint-disable react/prop-types */
+import { useParams, useNavigate } from "react-router-dom";
+import { Button, Card, Form, Row, Col, Container } from "react-bootstrap";
 
-import { useParams } from "react-router-dom";
-import { Form, Card, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import ModalConfirmationDelete from "./modal/ModalConfirmationDelete";
 
-export default function ContactView({ contacts }) {
+export default function ContactDelete({ contacts, handleDeleteContact }) {
   const { id } = useParams();
-
   const contactId = parseInt(id, 10);
-
   const contact = contacts
     ? contacts.find((contact) => contact.id === contactId)
     : null;
 
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
+  const handleDelete = () => {
+    handleDeleteContact(contactId);
+    navigate("/");
+  };
+
   return (
     <>
-      <p className='text-center fs-4 fw-bold text-primary'>VIEW-READ ONLY!</p>
+      <p className='text-center fs-4 fw-bold text-danger'>DELETE</p>
       <Card style={{ width: "50rem" }} className='m-auto'>
         <Card.Body>
           <Card.Title className='card-title'>Contact Details</Card.Title>
@@ -84,12 +91,30 @@ export default function ContactView({ contacts }) {
                 disabled
               />
             </Form.Group>
-            <Link to='/'>
-              <Button variant='dark mt-3'> Back </Button>
-            </Link>
           </Form>
+          <Container className='p-0 mt-3'>
+            <Row>
+              <Col>
+                <Button variant='dark' onClick={() => navigate("/")}>
+                  Back
+                </Button>
+              </Col>
+              <Col className='text-end'>
+                <Button variant='danger' onClick={() => setShowModal(true)}>
+                  Delete
+                </Button>
+              </Col>
+            </Row>
+          </Container>
         </Card.Body>
       </Card>
+
+      <ModalConfirmationDelete
+        showModal={showModal}
+        handleClose={() => setShowModal(false)}
+        handleDelete={handleDelete}
+        contact={contact}
+      />
     </>
   );
 }

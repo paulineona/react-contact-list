@@ -1,138 +1,83 @@
-
+/* eslint-disable react/prop-types */
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
+import { Link } from "react-router-dom";
+import PaginationComponent from "./Pagination";
+import { useState } from "react";
 
-function ContactList() {
+const Th = ({ children }) => <th className='align-baseline'>{children}</th>;
+const Td = ({ children }) => <td className='align-middle'>{children}</td>;
+
+export default function ContactList({ contacts }) {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 5;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = contacts.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const formatFullName = (fullName) => {
+    const [lastName, firstName, middleInitial] = fullName.split(" ");
+    const formatName = (name) =>
+      name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    return `${formatName(lastName)}, ${formatName(firstName)} ${formatName(
+      middleInitial
+    )}.`;
+  };
+
   return (
     <div className='border-class'>
       <h4 className='title'>Data Table</h4>
       <Table striped hover responsive>
         <thead>
           <tr>
-            <th>id</th>
-            <th>Full Name</th>
-            <th>Email Address</th>
-            <th>Contact Number</th>
-            <th>Location</th>
-            <th>Registered Date</th>
-            <th>Actions</th>
+            <Th>Id</Th>
+            <Th>Full Name</Th>
+            <Th>Email Address</Th>
+            <Th>Contact Number</Th>
+            <Th>Location</Th>
+            <Th>Registered Date</Th>
+            <Th>Actions</Th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Mark Otto</td>
-            <td>example@email.com</td>
-            <td>0915123456</td>
-            <td>Cebu</td>
-            <td>12/12/2000</td>
-            <td>
-              <Button variant='primary' size='sm' className='m-1'>
-                View
-              </Button>
-              {/* Add a View button */}
-              <Button variant='success' size='sm' className='m-1'>
-                Update
-              </Button>
-              {/* Add an Update button */}
-              <Button variant='danger' size='sm' className='m-1'>
-                Delete
-              </Button>
-              {/* Add a Delete button */}
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>John Doe</td>
-            <td>example@email.com</td>
-            <td>0915123456</td>
-            <td>Manila</td>
-            <td>01/12/1998</td>
-            <td>
-              <Button variant='primary' size='sm' className='m-1'>
-                View
-              </Button>
-              {/* Add a View button */}
-              <Button variant='success' size='sm' className='m-1'>
-                Update
-              </Button>
-              {/* Add an Update button */}
-              <Button variant='danger' size='sm' className='m-1'>
-                Delete
-              </Button>
-              {/* Add a Delete button */}
-            </td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>John Doe</td>
-            <td>example@email.com</td>
-            <td>0915123456</td>
-            <td>Manila</td>
-            <td>01/12/1998</td>
-            <td>
-              <Button variant='primary' size='sm' className='m-1'>
-                View
-              </Button>
-              {/* Add a View button */}
-              <Button variant='success' size='sm' className='m-1'>
-                Update
-              </Button>
-              {/* Add an Update button */}
-              <Button variant='danger' size='sm' className='m-1'>
-                Delete
-              </Button>
-              {/* Add a Delete button */}
-            </td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>John Doe</td>
-            <td>example@email.com</td>
-            <td>0915123456</td>
-            <td>Manila</td>
-            <td>01/12/1998</td>
-            <td>
-              <Button variant='primary' size='sm' className='m-1'>
-                View
-              </Button>
-              {/* Add a View button */}
-              <Button variant='success' size='sm' className='m-1'>
-                Update
-              </Button>
-              {/* Add an Update button */}
-              <Button variant='danger' size='sm' className='m-1'>
-                Delete
-              </Button>
-              {/* Add a Delete button */}
-            </td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>John Doe</td>
-            <td>example@email.com</td>
-            <td>0915123456</td>
-            <td>Manila</td>
-            <td>01/12/1998</td>
-            <td>
-              <Button variant='primary' size='sm' className='m-1'>
-                View
-              </Button>
-              {/* Add a View button */}
-              <Button variant='success' size='sm' className='m-1'>
-                Update
-              </Button>
-              {/* Add an Update button */}
-              <Button variant='danger' size='sm' className='m-1'>
-                Delete
-              </Button>
-              {/* Add a Delete button */}
-            </td>
-          </tr>
+          {currentItems.map((contact, index) => (
+            <tr key={index}>
+              <Td>{index + 1 + (currentPage - 1) * itemsPerPage}</Td>
+              <Td>{formatFullName(contact.fullName)}</Td>
+              <Td>{contact.emailAddress}</Td>
+              <Td>{contact.contactNumber}</Td>
+              <Td>{contact.location}</Td>
+              <Td>{contact.registeredDate}</Td>
+              <Td>
+                <Link to={`/view/${contact.id}`}>
+                  <Button variant='primary' size='sm' className='m-1'>
+                    View
+                  </Button>
+                </Link>
+                <Link to={`/update/${contact.id}`}>
+                  <Button variant='success' size='sm' className='m-1'>
+                    Update
+                  </Button>
+                </Link>
+                <Link to={`/delete/${contact.id}`}>
+                  <Button variant='danger' size='sm' className='m-1'>
+                    Delete
+                  </Button>
+                </Link>
+              </Td>
+            </tr>
+          ))}
         </tbody>
       </Table>
+      <PaginationComponent
+        itemsPerPage={itemsPerPage}
+        totalItems={contacts.length}
+        paginate={paginate}
+      />
     </div>
   );
 }
-
-export default ContactList;
