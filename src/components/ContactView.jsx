@@ -71,7 +71,6 @@ export default function ContactView({ contacts }) {
                 value={contact.location}
                 readOnly
                 disabled
-                x
               />
             </Form.Group>
             <Form.Group className='mt-2 mb-2'>

@@ -1,4 +1,6 @@
 /* eslint-disable react/prop-types */
+
+// Import necessary libraries and components
 import { useParams } from "react-router-dom";
 import { Form, Card, Button, Row, Col } from "react-bootstrap";
 import { Container } from "react-bootstrap";
@@ -7,18 +9,23 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import ModalConfirmationUpdate from "./modal/ModalConfirmationUpdate";
 
+// Define the ContactUpdate component
 export default function ContactUpdate({ contacts, handleUpdateContact }) {
+  // Get the contact ID from the URL parameters
   const { id } = useParams();
+  // Get the contact ID from the URL parameters
   const contactId = parseInt(id, 10);
+  // Find the contact with the given ID in the contacts array
   const contact = contacts
     ? contacts.find((contact) => contact.id === contactId)
     : null;
-
+  // Initialize the form with react-hook-form
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
+    // Set the default values of the form fields to the contact's details
     defaultValues: {
       fullName: contact.fullName,
       emailAddress: contact.emailAddress,
@@ -28,19 +35,29 @@ export default function ContactUpdate({ contacts, handleUpdateContact }) {
     },
   });
 
+  // Initialize state for showing the confirmation modal and the updated data
   const [showModal, setShowModal] = useState(false);
   const [updatedData, setUpdatedData] = useState({});
 
+  // Define the function to run when the form is submitted
   const onSubmit = (data) => {
     setUpdatedData({ ...contact, ...data });
     setShowModal(true);
   };
 
   const handleConfirm = () => {
+    // Call the handleUpdateContact function with the updated data
     handleUpdateContact(updatedData);
+    // Hide the confirmation modal
     setShowModal(false);
   };
 
+  const handleClose = () => {
+    // Hide the confirmation modal
+    setShowModal(false);
+  };
+
+  // Render the component
   return (
     <>
       <p className='text-center fs-4 fw-bold text-success'>UPDATE</p>
@@ -155,9 +172,15 @@ export default function ContactUpdate({ contacts, handleUpdateContact }) {
           </Form>
         </Card.Body>
       </Card>
+      {/* ModalConfirmationUpdate component */}
+      {/* This is displayed when showModal is true */}
+      {/* handleClose is called when the user wants to close the modal without confirming the update*/}
+      {/* handleConfirm is called when the user confirms the update */}
+      {/* The updated data is passed as props to the modal */}
       <ModalConfirmationUpdate
         show={showModal}
-        handleClose={handleConfirm}
+        handleClose={handleClose} // pass handleClose as a prop
+        handleConfirm={handleConfirm}
         emailAddress={updatedData.emailAddress}
         contactNumber={updatedData.contactNumber}
         location={updatedData.location}

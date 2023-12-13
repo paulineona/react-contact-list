@@ -4,12 +4,19 @@ import { Modal, Button } from "react-bootstrap";
 export default function ModalConfirmationUpdate({
   show,
   handleClose,
+  handleConfirm,
   emailAddress,
   contactNumber,
-  location,               
+  location,
 }) {
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal
+      show={show}
+      onHide={handleClose}
+      centered
+      backdrop='static'
+      keyboard={false}
+    >
       <Modal.Header closeButton>
         <Modal.Title> Please confirm the update to the following:</Modal.Title>
       </Modal.Header>
@@ -21,7 +28,7 @@ export default function ModalConfirmationUpdate({
         Location: <strong>{location}</strong>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant='success' onClick={handleClose}>
+        <Button variant='success' onClick={handleConfirm}>
           Yes
         </Button>
         <Button variant='danger' onClick={handleClose}>

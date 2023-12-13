@@ -1,9 +1,13 @@
 /* eslint-disable */
+
+// Import necessary components and libraries
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useForm } from "react-hook-form";
 
+// Define the ContactForm component
 export default function ContactForm({ handleAddContact }) {
+  // Initialize the form with react-hook-form
   const {
     register,
     handleSubmit,
@@ -11,12 +15,16 @@ export default function ContactForm({ handleAddContact }) {
     formState: { errors },
   } = useForm();
 
+  // Define the onSubmit function
   const onSubmit = (data) => {
     console.log(data);
+    // Call the handleAddContact function passed as a prop with the form data
     handleAddContact(data);
+    // Reset the form fields
     reset();
   };
 
+  // Define a function to check if the selected date is the current date
   const isCurrentDate = (selectedDate) => {
     const currentDate = new Date();
     const isSameDate =
@@ -26,26 +34,32 @@ export default function ContactForm({ handleAddContact }) {
     return isSameDate;
   };
 
+  // Define a function to validate the full name field
   const validateFullName = (value) => {
     const [lastName, firstName, middleInitial] = value.split(" ");
 
+    // If any part of the full name is missing, return an error message
     if (!lastName || !firstName || !middleInitial) {
-      return "Full Name field should have Last Name, First Name, Middle Initial";
+      return "Full Name field should have Last Name, First Name, Middle Initial.";
     }
 
+    // If the full name is valid, return true
     return true;
   };
 
+  // Render the form
   return (
     <div className='border-class'>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <h3 className='title'>Contact Form</h3>
+
         {/* ...FULL NAME... */}
         <Form.Group className='p-2' controlId='formFullName'>
           <Form.Label>Full Name</Form.Label>
           <Form.Control
             type='text'
             placeholder='Last Name, First Name, Middle Initial'
+            // The register function from react-hook-form is used to register this input field with the form
             {...register("fullName", {
               required: "Full Name field cannot be blank",
               maxLength: {
@@ -59,6 +73,7 @@ export default function ContactForm({ handleAddContact }) {
               validate: validateFullName,
             })}
           />
+          {/* Display errors for the Full Name field */}
           {errors.fullName && (
             <p style={{ fontSize: "12px" }} className='text-danger m-1'>
               {errors.fullName.message}
@@ -84,6 +99,7 @@ export default function ContactForm({ handleAddContact }) {
               },
             })}
           />
+          {/* Display errors for the Birth Date field */}
           {errors.emailAddress && (
             <p style={{ fontSize: "12px" }} className='text-danger m-1'>
               {errors.emailAddress.message}
@@ -104,6 +120,7 @@ export default function ContactForm({ handleAddContact }) {
                 "Contact Number field should be numeric and 11 characters long",
             })}
           />
+          {/* Display errors for the Contact Number field */}
           {errors.contactNumber && (
             <p style={{ fontSize: "12px" }} className='text-danger m-1'>
               {errors.contactNumber.message}
@@ -124,6 +141,7 @@ export default function ContactForm({ handleAddContact }) {
             <option>Cebu</option>
             <option>Manila</option>
           </Form.Select>
+          {/* Display errors for the Location field */}
           {errors.location && (
             <p style={{ fontSize: "12px" }} className='text-danger m-1'>
               {errors.location.message}
@@ -146,6 +164,7 @@ export default function ContactForm({ handleAddContact }) {
               },
             })}
           />
+          {/* Display errors for the Registered Date field */}
           {errors.registeredDate && (
             <p style={{ fontSize: "12px" }} className='text-danger m-1'>
               {errors.registeredDate.message}
