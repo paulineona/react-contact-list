@@ -1,0 +1,717 @@
+EXPLAINING THE CODE
+
+first - demo the app
+second - either try to say what is the file structure and libraries used for the application
+
+src - contains the assets, components( contains header and modal folder) and app.jsx (parent component), main.jsx, and their styling - css 
+
+
+Libraries
+1. React
+2. React- bootstrap: for design purposes, replaces the bootstrap JavaScript, front-end framework
+3. React Hook Form: for form validation, matic yung pag handle ng form state management, tracking the values for each field, validation status, and errors unlike using useState to track their values where you use an event handler and handle validation and error tracking separately.
+4. React Router: for facilitating navigation and rendering of different components based on the current URL or route
+
+
+FILES:
+
+*header folder: - contains the header component and its styling
+
+*modal folder: - contains the modal components and its styling
+
+main.jsx 
+: entry point of the react app
+: responsible for importing the necessary modules and components, creating a root React container, and rendering the main App component into this container to start the application.
+
+App.jsx
+: parent component or main component of the application 
+: managing the main state of the application, 
+: defining the main routes of the application, and 
+: rendering the main layout of the application
+
+****  The App component is responsible for rendering various child components such as Header, ContactForm, ContactList, ContactView, ContactUpdate, and ContactDelete.
+
+****  It manages the state of the contacts array using the useState hook.
+
+****  It defines functions (handleAddContact, handleUpdateContact, handleDeleteContact) that are passed down as props to child components to handle actions related to contacts.
+
+--------------- there isn't a need for a separate handleViewContact function to be called from the parent component (App). The reason for this is that the ContactView component primarily focuses on displaying contact details in a read-only view, and it doesn't involve user interactions that need to be handled by the parent.
+--------------- The ContactView component is designed to display contact details in a read-only manner. It doesn't allow the user to modify the data or trigger any actions that would require handling in the parent component.
+
+****  It uses the Router component from react-router-dom to define routes and renders child components based on these routes.
+
+**** Overall, the App component is the central component that orchestrates the behavior of the entire application.
+
+
+The explanation of the App.jsx
+
+Certainly! Let's break down the code and explain each part:
+
+jsx
+
+// Import necessary components and libraries
+import Header from "./components/header/Header";
+import ContactForm from "./components/ContactForm";
+import ContactList from "./components/ContactList";
+import ContactView from "./components/ContactView";
+import ContactUpdate from "./components/ContactUpdate";
+import ContactDelete from "./components/ContactDelete";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+// Main App component
+export default function App() {
+  // State for storing contacts, initialized from local storage or as an empty array
+  const [contacts, setContacts] = useState(
+    JSON.parse(localStorage.getItem("contacts")) || []
+  );
+
+  // Effect hook to update local storage whenever contacts state changes
+  useEffect(() => {
+    localStorage.setItem("contacts", JSON.stringify(contacts));
+  }, [contacts]);
+
+  // Function to handle adding a new contact
+  const handleAddContact = (contact) => {
+    const id = contacts.length + 1;
+    const newContact = { id, ...contact };
+    setContacts((prevContacts) => [...prevContacts, newContact]);
+  };
+
+  // Function to handle updating an existing contact
+  const handleUpdateContact = (updatedContact) => {
+    setContacts((prevContacts) =>
+      prevContacts.map((contact) =>
+        contact.id === updatedContact.id ? updatedContact : contact
+      )
+    );
+  };
+
+  // Function to handle deleting a contact
+  const handleDeleteContact = (id) => {
+    setContacts(contacts.filter((contact) => contact.id !== id));
+  };
+
+  // Render the main app
+  return (
+    <Router>
+      <div>
+        <Header />
+        <Container fluid>
+          <Row>
+            {/* Routes will be defined here */}
+            <Routes>
+              {/* The path for the home page is '/' */}
+              <Route
+                path='/'
+                element={
+                  <>
+                    {/* The home page displays the ContactForm and ContactList components side by side */}
+                    <Col xs={4} md={3}>
+                      <ContactForm handleAddContact={handleAddContact} />
+                    </Col>
+                    <Col xs={8} md={9}>
+                      <ContactList contacts={contacts} />
+                    </Col>
+                  </>
+                }
+              />
+              {/* ...VIEW-PAGE...*/}
+              {/* The path for the view page includes the id of the contact to be viewed. */}
+              {/* The view page displays the details of a single contact */}
+              <Route
+                path='view/:id'
+                element={<ContactView contacts={contacts} />}
+              />
+              {/* ...UPDATE-PAGE...*/}
+              {/* The path for the update page includes the id of the contact to be updated */}
+              {/* The update page displays a form to update the details of a contact */}
+              <Route
+                path='update/:id'
+                element={
+                  <ContactUpdate
+                    contacts={contacts}
+                    handleUpdateContact={handleUpdateContact}
+                  />
+                }
+              />
+              {/* The path for the delete page includes the id of the contact to be deleted */}
+              {/* The delete page asks for confirmation before deleting a contact */}
+              <Route
+                path='delete/:id'
+                element={
+                  <ContactDelete
+                    contacts={contacts}
+                    handleDeleteContact={handleDeleteContact}
+                  />
+                }
+              />
+            </Routes>
+          </Row>
+        </Container>
+      </div>
+    </Router>
+  );
+}
+
+Explanation:
+
+    Imports:
+        Various components are imported from different files.
+        React Bootstrap components (Container, Row, Col) are imported for styling.
+        Bootstrap CSS is imported for styling.
+        React hooks (useState, useEffect) and routing components (BrowserRouter, Route, Routes) are imported.
+
+    State and Local Storage:
+        The contacts state is initialized using useState, either from local storage or as an empty array.
+        The useEffect hook is used to update local storage whenever the contacts state changes.
+
+    Contact Handling Functions:
+        handleAddContact: Adds a new contact to the state.
+        handleUpdateContact: Updates an existing contact in the state.
+        handleDeleteContact: Deletes a contact from the state.
+
+    Router Setup:
+        The main component is wrapped in a Router component for client-side routing.
+        Components like Header, ContactForm, ContactList, etc., are rendered based on the defined routes.
+
+    Routes:
+        The home page route ("/") displays ContactForm and ContactList components side by side.
+        View, update, and delete routes are defined with parameters (:id) to specify the contact to be viewed, updated, or deleted.
+        The routes render corresponding components (ContactView, ContactUpdate, ContactDelete) with the necessary props.
+
+    Component Structure:
+        The overall structure is responsive, with columns adjusting based on screen size (xs for extra-small, md for medium).
+        Components are organized in a fluid Container within a Row.
+
+
+Detailed explanation:
+
+Now, let's explain each part:
+
+-----State Management with useState:
+        const [contacts, setContacts] = useState(JSON.parse(localStorage.getItem("contacts")) || []);
+            Initializes the contacts state using the useState hook. It retrieves the contacts from local storage using localStorage.getItem("contacts"), parses the JSON, and defaults to an empty array if there are no contacts in local storage.
+
+    Effect Hook for Local Storage Sync:
+
+        jsx
+
+useEffect(() => {
+  localStorage.setItem("contacts", JSON.stringify(contacts));
+}, [contacts]);
+
+------Uses the useEffect hook to run the specified function whenever the contacts state changes.
+    In this case, it updates the local storage with the current state of contacts. This ensures that the contacts are persisted between page reloads or component re-renders.
+
+Certainly! Let's break down the state management and the useEffect hook in the provided React component:
+
+
+// State for storing contacts, initialized from local storage or as an empty array
+const [contacts, setContacts] = useState(
+  JSON.parse(localStorage.getItem("contacts")) || []
+);
+
+// Effect hook to update local storage whenever contacts state changes
+useEffect(() => {
+  localStorage.setItem("contacts", JSON.stringify(contacts));
+}, [contacts]);
+
+State Management with useState:
+
+    Initialization of State:
+
+    const [contacts, setContacts] = useState(
+      JSON.parse(localStorage.getItem("contacts")) || []
+    );
+
+        Uses the useState hook to create a state variable contacts and a function setContacts to update that state.
+        It initializes the contacts state with the value retrieved from local storage using localStorage.getItem("contacts").
+        If there are no contacts in local storage, it defaults to an empty array ([]).
+
+    State Structure:
+        contacts: Represents the current state of contacts in the component.
+        setContacts: Function to update the state of contacts.
+
+useEffect Hook:
+
+    Update Local Storage When Contacts State Changes:
+
+    jsx
+
+useEffect(() => {
+  localStorage.setItem("contacts", JSON.stringify(contacts));
+}, [contacts]);
+
+    Uses the useEffect hook to perform side effects in functional components.
+    The effect runs whenever the dependency array ([contacts]) changes. In this case, it depends on the contacts state.
+
+Local Storage Update:
+
+    localStorage.setItem("contacts", JSON.stringify(contacts)): Updates the "contacts" key in local storage with the current state of the contacts array, converting it to a JSON string.
+
+
+handleAddContact
+
+
+Now, let's go through each step:
+
+1. Generate a New ID:
+
+const id = contacts.length + 1;
+
+    *Calculates a new ID for the contact by adding 1 to the length of the existing contacts array.
+    *This ensures that each contact has a unique identifier.
+
+2. Create a New Contact Object:
+
+const newContact = { id, ...contact };
+
+    *Creates a new contact object (newContact) by spreading the generated id and combining it with the provided contact data.
+    *The ...contact syntax spreads the properties of the contact object(ex fullName, emailAddress) into the new object.
+
+3. Update the Contacts State:
+
+setContacts((prevContacts) => [...prevContacts, newContact]);
+
+       *Uses the setContacts function provided by the useState hook to update the state.
+       *The argument to setContacts is a function that takes the previous state (prevContacts) and returns the new state.
+       *In this case, it appends the newContact to the existing contacts array (prevContacts).
+        The spread operator (...) is used to create a new array without mutating the original array.
+
+In summary, the handleAddContact function generates a new ID for the contact, creates a new contact object by combining the ID with the provided contact data, and then updates the state by appending the new contact to the existing contacts. This ensures that a new contact is added to the list of contacts without modifying the original state directly.
+
+setContacts((prevContacts) => [...prevContacts, newContact]);
+
+    setContacts:
+        It's a function provided by the useState hook that allows you to update the state variable contacts.
+
+    Function Argument:
+        The argument is a function that takes the previous state (prevContacts).
+
+    Creating a New Array:
+        [...prevContacts, newContact]: This uses the spread operator (...) to create a new array.
+        It takes all the elements from the existing prevContacts array and adds a new element, newContact, to the end of the array.
+
+    Updating State:
+        The entire expression is passed to setContacts.
+        When this function is executed, it sets the state of contacts to the newly created array.
+
+In simpler terms, this code is saying, "Take the existing contacts, make a copy of them, and add the new contact to the end. Now, set the state of contacts to this updated array." It's a common pattern to update an array in React state without directly modifying the original array. The spread operator is used to create a new array, ensuring that the state is updated correctly without mutating the existing state.
+
+
+handleUpdateContact
+
+    handleUpdateContact Function:
+        This function is responsible for updating an existing contact in the contacts state.
+
+    setContacts Function:
+        It's a function provided by the useState hook that allows you to update the state variable contacts.
+
+    Updating State using map:
+        (prevContacts) => prevContacts.map(...): This uses the map function to create a new array by iterating over each element of the existing prevContacts array.
+
+    Conditionally Replacing Contacts:
+        (contact) => (contact.id === updatedContact.id ? updatedContact : contact): For each contact in the array, it checks if the id of the contact matches the id of the updatedContact.
+        If there's a match, it means this is the contact that needs to be updated, so it replaces the original contact with the updatedContact.
+        If there's no match, it leaves the contact unchanged.
+
+    Updating the State:
+        The entire expression is passed to setContacts. When this function is executed, it sets the state of contacts to the newly created array.
+
+In simpler terms, this function says, "Take the existing contacts, go through each one, and if you find a contact with the same id as the updatedContact, replace it with the updatedContact. Then, set the state of contacts to this updated array."
+
+handleDeleteContact
+
+    handleDeleteContact Function:
+        This function is responsible for deleting a contact with a specified id from the contacts state.
+
+    setContacts Function:
+        It's a function provided by the useState hook that allows you to update the state variable contacts.
+
+    Updating State using filter:
+        contacts.filter((contact) => contact.id !== id): This uses the filter method to create a new array by excluding the contact with the specified id.
+
+    Deleting the Contact:
+        For each contact in the array, the condition contact.id !== id is evaluated.
+        If the id of the contact does not match the specified id, it remains in the new array.
+        If the id matches, it means this is the contact that needs to be deleted, so it is excluded from the new array.
+
+    Updating the State:
+        The entire expression 
+
+-------------- CONTACT FORM ---------------------
+
+ContactForm.jsx
+:represents a form for adding new contacts : uses react-hook-form to manage the form state, handle form validation, and handle form submission. : form is submitted, it calls the handleAddContact function passed as a prop with the form data. Responsible for adding the new contact to a list or database. : after the form is submitted, it resets the form fields to their initial state, ready for another input. : validation: It includes custom validation functions
+
+
+
+Import Statements
+
+jsx
+
+// Import necessary components and libraries
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import { useForm } from "react-hook-form";
+
+    Imports required components and libraries:
+        Button and Form from react-bootstrap.
+        useForm hook from react-hook-form.
+
+ContactForm Component Definition
+
+jsx
+
+export default function ContactForm({ handleAddContact }) {
+  // Component logic goes here
+}
+
+    Defines the ContactForm component as a functional component.
+
+useForm Hook Initialization
+
+jsx
+
+const {
+  register,
+  handleSubmit,
+  reset,
+  formState: { errors },
+} = useForm();
+
+    Initializes the useForm hook to handle form-related functionality.
+    Destructures register, handleSubmit, reset, and errors from the hook.
+
+onSubmit Function
+
+jsx
+
+const onSubmit = (data) => {
+  console.log(data);
+  // Call the handleAddContact function passed as a prop with the form data
+  handleAddContact(data);
+  // Reset the form fields
+  reset();
+};
+
+    Defines the onSubmit function to be triggered when the form is submitted.
+    Logs the form data to the console.
+    Calls the handleAddContact function passed as a prop with the form data.
+    Resets the form fields using the reset function.
+
+isCurrentDate Function
+
+jsx
+
+const isCurrentDate = (selectedDate) => {
+  // Function logic to check if selectedDate is the current date
+};
+
+    Defines the isCurrentDate function to check if the selected date is the current date.
+
+validateFullName Function
+
+jsx
+
+const validateFullName = (value) => {
+  // Function logic to validate the full name field
+};
+
+    Defines the validateFullName function to validate the full name field.
+
+
+Form Rendering
+
+jsx
+
+return (
+  <div className='border-class'>
+    <Form onSubmit={handleSubmit(onSubmit)}>
+      {/* Form fields and validation go here */}
+      {/* ...FULL NAME... */}
+      {/* ...EMAIL ADDRESS... */}
+      {/* ...CONTACT NUMBER... */}
+      {/* ...LOCATION... */}
+      {/* ...REGISTERED DATE... */}
+      <div className='d-grid gap-2 p-2'>
+        <Button variant='dark' size='lg' type='submit'>
+          Add Contact
+        </Button>
+      </div>
+    </Form>
+  </div>
+);
+
+    Renders the form structure using react-bootstrap components.
+    Utilizes the register function from react-hook-form to handle form field registration and validation. - In summary, the ...register spread operator is a convenient way to apply multiple validation rules and options to the Form.Control component for the "Full Name" input field. It helps keep the code concise and readable.
+    Displays error messages for each form field if validation fails.
+    Includes a submit button that triggers the onSubmit function.
+
+n summary, this pattern is used to conditionally render the error message only when there is an error for the "Full Name" field. If errors.fullName is truthy (indicating an error exists), the error message is displayed; otherwise, nothing is rendered. It's a concise way to handle conditional rendering in React.
+
+The <Form> component's onSubmit attribute is set to a function, handleSubmit(onSubmit).
+
+    handleSubmit is a function provided by react-hook-form. It's used to handle the form submission process.
+    onSubmit is the function that you've defined within the ContactForm component.
+
+When the <Form> component is submitted (for instance, by clicking a submit button inside the form), handleSubmit(onSubmit) is triggered. Here's what happens:
+
+    Validation Check:
+        handleSubmit from react-hook-form runs the validation rules set for the form inputs.
+        It checks if the inputs meet the specified criteria (e.g., required fields, maximum length, pattern matching, custom validation).
+
+    Handling Form Data:
+        If the validation passes, it calls your onSubmit function, passing the validated form data as an argument.
+        Inside your onSubmit function, you can perform actions like submitting data to a server, handling the form input data, or any other logic you've defined.
+
+    Resetting Form (if needed):
+        Additionally, in the onSubmit function, you've included a reset() call. This resets the form fields after successful submission, clearing any user-entered data.
+
+
+
+
+-------- CONTACT LIST ----------
+ContactList.jsx : component used to display the contact list : provide a user interface for viewing a list of contacts. Each contact is displayed in a row in a table format
+
+Import Statements:
+
+javascript
+
+/* eslint-disable react/prop-types */
+import Button from "react-bootstrap/Button";
+import Table from "react-bootstrap/Table";
+import { Link } from "react-router-dom";
+import PaginationComponent from "./Pagination";
+import { useState } from "react";
+
+    The code starts by importing necessary components and libraries.
+    Button, Table, and Link are from the React Bootstrap library.
+    PaginationComponent is a custom pagination component (presumably defined elsewhere in the codebase).
+    useState is a React hook used to manage state.
+
+Custom Table Header and Data Components:
+
+javascript
+
+const Th = ({ children }) => <th className='align-baseline'>{children}</th>;
+const Td = ({ children }) => <td className='align-middle'>{children}</td>;
+
+    These are functional components for custom table header (Th) and data (Td) elements.
+    They are used for styling purposes, applying specific classes (align-baseline and align-middle).
+
+ContactList Component:
+
+javascript
+
+export default function ContactList({ contacts }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = contacts.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const formatFullName = (fullName) => {
+    // Function to format the full name
+    const [lastName, firstName, middleInitial] = fullName.split(" ");
+    const formatName = (name) =>
+      name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    return `${formatName(lastName)}, ${formatName(firstName)} ${formatName(
+      middleInitial
+    )}.`;
+  };
+
+  return (
+    // Rendered JSX code...
+  );
+}
+
+    ContactList is a functional component that receives contacts as a prop.
+    currentPage and setCurrentPage are state variables managed by the useState hook.
+    itemsPerPage is set to 5, indicating the number of items to display per page.
+    indexOfLastItem and indexOfFirstItem calculate the range of items to display for the current page.
+    currentItems is a subset of contacts based on the current page.
+    The paginate function is used to update the current page.
+    formatFullName is a function that formats the full name with proper casing.
+
+Rendering JSX:
+
+javascript
+
+// Render the table with the current items
+return (
+  <div className='border-class'>
+    <h4 className='title'>Data Table</h4>
+    <Table striped hover responsive>
+      <thead>
+        <tr>
+          <Th>Id</Th>
+          <Th>Full Name</Th>
+          <Th>Email Address</Th>
+          <Th>Contact Number</Th>
+          <Th>Location</Th>
+          <Th>Registered Date</Th>
+          <Th>Actions</Th>
+        </tr>
+      </thead>
+      <tbody>
+        {/* Iterate over the current items and create a table row for each */}
+        {currentItems.map((contact, index) => (
+          // Rendered JSX code for each contact...
+        ))}
+      </tbody>
+    </Table>
+    {/* Render the PaginationComponent with the necessary props */}
+    <PaginationComponent
+      itemsPerPage={itemsPerPage}
+      totalItems={contacts.length}
+      paginate={paginate}
+    />
+  </div>
+);
+
+    The JSX code renders a table with headers, iterates over currentItems to create rows, and includes links for view, update, and delete actions.
+    The PaginationComponent is rendered at the end to handle pagination.
+
+This component essentially displays a paginated table of contacts with actions to view, update, and delete each contact. The styling and pagination logic make it user-friendly for navigating through the contact list.
+
+
+----------- CONTACT VIEW---------
+
+    mport Statements:
+        useParams is used to extract parameters from the URL.
+        Form, Card, Button, and Link are components from the react-bootstrap library for styling.
+
+    Function Component:
+        ContactView is a functional component that takes contacts as a prop.
+
+    Getting Contact ID:
+        const { id } = useParams(); extracts the id parameter from the URL.
+        const contactId = parseInt(id, 10); converts the id to an integer.
+
+    Finding Contact:
+        const contact = contacts ? contacts.find((contact) => contact.id === contactId) : null; finds the contact with the matching ID in the contacts array.
+
+    Rendering Component:
+        The component is wrapped in <>...</> (React Fragments) to avoid unnecessary div elements in the DOM.
+
+    Display Heading:
+        A heading is displayed at the top of the component.
+
+    Card Component:
+        A Card component from react-bootstrap is used to structure the layout of the contact details.
+
+    Form Component:
+        A Form component is used to display various fields of contact information.
+
+    Form Fields:
+        Each field (ID, Full Name, Email Address, etc.) is displayed using Form.Group and Form.Control components.
+        Fields are set to readOnly and disabled to prevent user input as this is a view-only page.
+
+    Link to Main Page:
+        A Link component is used to create a link to the main page.
+        A Button is placed inside the link to provide a visual "Back" button.
+
+This component is responsible for presenting the details of a specific contact in a read-only view, with formatted information and a link to navigate back to the main page. The use of react-bootstrap components ensures a styled and responsive user interface.
+
+
+----- CONTACT UPDATE ------- 
+
+This code is for the ContactUpdate component, responsible for updating a contact's details. Let's break it down part by part:
+
+    Imports:
+        Essential libraries and components like useParams, Form, Card, Button, Row, Col, Container, Link, useForm, useState, and ModalConfirmationUpdate are imported from different modules.
+        ModalConfirmationUpdate is likely a custom modal component for confirming updates.
+
+    Functional Component:
+        ContactUpdate is a functional component that receives contacts and handleUpdateContact as props.
+
+    Initialization:
+        useParams() extracts the id parameter from the URL.
+        contactId parses the id as an integer to match the contact ID.
+        contact uses the ID to find the specific contact details from the contacts array.
+
+    Form Initialization using react-hook-form:
+        useForm is employed to manage form state, validation, and default values.
+        defaultValues pre-fills form fields with the contact's existing details.
+
+    State Management with useState:
+        showModal and updatedData are state variables initialized using useState.
+        showModal toggles the confirmation modal's visibility.
+        updatedData stores the updated contact details before confirmation.
+
+    Form Submission Handling:
+        handleSubmit(onSubmit) triggers onSubmit when the form is submitted.
+        onSubmit sets updatedData with the modified contact data and shows the confirmation modal.
+
+    Form Fields and Validation:
+        Fields (Email Address, Contact Number, Location) are presented using Form.Group and Form.Control.
+        Validation rules are applied using react-hook-form's register and errors to manage error messages.
+
+    Buttons and Navigation:
+        Back button redirects to the main page (/).
+        Save button submits the form for updating contact details.
+
+    Modal Component:
+        ModalConfirmationUpdate is included conditionally based on showModal state.
+        It shows a confirmation modal when showModal is true.
+        handleClose closes the modal without confirmation.
+        handleConfirm triggers the update after confirmation.
+        Updated contact data is passed to the modal as props.
+
+This component integrates form handling with validation, pre-filling existing contact details, managing state for modal confirmation, and handling the update process for contact details. Additionally, it provides a structured layout using react-bootstrap components.
+
+---------- CONTACT DELETE -------------------
+
+Certainly! The provided code is for the ContactDelete component, responsible for displaying contact details and handling the deletion of a contact. Let's break it down part by part:
+
+    Imports:
+        Libraries and components like useParams, useNavigate, Button, Card, Form, Row, Col, Container, useState, and ModalConfirmationDelete are imported.
+        ModalConfirmationDelete is likely a custom modal component for confirming deletions.
+
+    Functional Component:
+        ContactDelete is a functional component that receives contacts and handleDeleteContact as props.
+
+    Initialization:
+        useParams() extracts the id parameter from the URL.
+        contactId parses the id as an integer to match the contact ID.
+        contact uses the ID to find the specific contact details from the contacts array.
+
+    State Management with useState:
+        showModal is a state variable initialized using useState to manage the visibility of the confirmation modal.
+
+    Navigation Handling with useNavigate:
+        useNavigate is employed for programmatically navigating to other routes.
+
+    Deletion Handling:
+        handleDelete is a function called when the user confirms the deletion.
+        It calls handleDeleteContact with the contactId to delete the contact.
+        After deletion, it navigates the user back to the home page (/).
+
+    Form Fields:
+        Fields (ID, Full Name, Email Address, Contact Number, Location, Registered Date) are presented using Form.Group and Form.Control.
+        The values are populated with the contact details.
+        Fields are displayed using a combination of string manipulation and data formatting.
+
+    Buttons and Navigation:
+        Back button redirects to the main page (/) using useNavigate.
+        Delete button triggers the deletion confirmation modal by setting showModal to true.
+
+    Modal Component:
+        ModalConfirmationDelete is included conditionally based on the showModal state.
+        It shows a confirmation modal when showModal is true.
+        handleClose closes the modal without confirming the deletion.
+        handleDelete triggers the actual deletion after confirmation.
+        The contact to be deleted is passed to the modal as props.
+
+This component combines contact details display with deletion handling, including confirmation modal functionality. It offers a structured layout using react-bootstrap components.		
+
